@@ -1,4 +1,4 @@
-namespace Star.Widget {
+/*namespace Star.Widget {
 
   public enum GUISTATE {
     NONE,
@@ -134,15 +134,6 @@ namespace Star.Widget {
 
     public void SetPriority(int priority) { this.Priority = priority; }
 
-    /*public bool TESTFUNCTION(GUILogic sender) {
-      Log.Write("GLOO GLOO GLOO");
-      return true;
-    }*/
-
-    /*public void ASSIGNTESTFUNCTION() {
-      SetOnDownKeyHandler(KeyButton.BUTTONCODE.CONFIRM, TESTFUNCTION);
-    }*/
-
     public void AddChild(GUILogic child) {
       children.Add(child);
       child.SetParent(this);
@@ -237,4 +228,4 @@ namespace Star.Widget {
 
   }
   
-}
+}*/

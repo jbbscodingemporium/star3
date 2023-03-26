@@ -31,8 +31,10 @@ namespace Star.Widget {
     public WidgetStyler? baseStyler = null;
     public WidgetStyler? logicHighlightStyler = null;
 
-    //The guilogic bound to this widget
-    protected GUILogic? guiLogic = null;
+    //The guiLogic bound to this widget
+    //protected GUILogic? guiLogic = null;
+    //The WidgetEventHandler for this widget
+    protected WidgetEventHandler? widgetEventHandler = null;
 
     public Widget(int minW, int minH, int maxW = MAX_W, int maxH = MAX_H) {
       wMinIntrinsic = minW;
@@ -48,11 +50,19 @@ namespace Star.Widget {
     }
 
     //Set to null to clear the GUILogic
-    public void SetGUILogic(GUILogic? logic) {
+    /*public void SetGUILogic(GUILogic? logic) {
       if (logic != null && guiLogic != null && guiLogic != logic) {
         throw new StarExcept("Error: tried to assign a guiLogic to a widget that already had one!");
       }
       guiLogic = logic;
+    }*/
+
+    //Set to null to clear the EventHandler
+    public void SetEventHandler(WidgetEventHandler? handler) {     
+      if (handler != null && widgetEventHandler != null && widgetEventHandler != handler) {
+        throw new StarExcept("Error: tried to assign a guiLogic to a widget that already had one!");
+      }
+      widgetEventHandler = handler;
     }
 
     
@@ -234,7 +244,7 @@ namespace Star.Widget {
     protected WidgetStyler? SelectStyler() {
       WidgetStyler? styler = baseStyler;
 
-      if (guiLogic != null && guiLogic.IsLogicCursorOverMe() && logicHighlightStyler != null) {
+      if (widgetEventHandler != null && widgetEventHandler.IsCursorSetOverMe() && logicHighlightStyler != null) {
         styler = (styler == null) ? logicHighlightStyler : styler.Compound(logicHighlightStyler);
       }
       
@@ -278,10 +288,14 @@ namespace Star.Widget {
       if (mouseClickEvent.consumed) return;
 
       if (mouseClickEvent.mouseButton == MouseButtons.MB.LEFT &&
-          guiLogic != null && IsPointInBounds(mouseXlocal, mouseYlocal)) {
-        //mouseClickEvent.consumed = guiLogic.MouseClickedOnMe();
-        guiLogic.HandleMouseClickEvent(mouseClickEvent);
+          widgetEventHandler != null && IsPointInBounds(mouseXlocal, mouseYlocal)) {
+            widgetEventHandler.HandleMouseClickEvent(mouseClickEvent);
       }
+
+      /*if (mouseClickEvent.mouseButton == MouseButtons.MB.LEFT &&
+          guiLogic != null && IsPointInBounds(mouseXlocal, mouseYlocal)) {
+        guiLogic.HandleMouseClickEvent(mouseClickEvent);
+      }*/
     }
 
     //Returns true if the mouseOver has been consumed (handled).
@@ -289,10 +303,11 @@ namespace Star.Widget {
 
       mouseOverConsumed = HandleMouseOverLogicForChildren(mouseXlocal, mouseYlocal, mouseOverConsumed);
 
-      if (guiLogic == null) { return mouseOverConsumed; }
+      if (widgetEventHandler == null) { return mouseOverConsumed; }
+
       bool mouseOverMe = IsPointInBounds(mouseXlocal, mouseYlocal);
       bool mouseConsideredOver = mouseOverMe && !mouseOverConsumed;
-      return guiLogic.HandleMouseOver(mouseConsideredOver);
+      return widgetEventHandler.HandleMouseOver(mouseConsideredOver);
     }
 
     protected virtual bool HandleMouseOverLogicForChildren(int mouseXlocal, int mouseYlocal, bool mouseOverConsumed) {

@@ -253,6 +253,13 @@ class GameLoop {
     //t2.testfg = b2.testfg = SFML.Graphics.Color.White;
     b2.AddChild(t2,true);
 
+    WidgetEventHandler b1handler = new WidgetEventHandler();
+    b1.SetEventHandler(b1handler);
+
+    WidgetEventHandler b2handler = new WidgetEventHandler();
+    b2handler.onMouseOver = TestGUI.MouseOverWrite;
+    b2.SetEventHandler(b2handler);
+
     Widget spaceFiller = new Widget(0,0);
     
     row.AddChild(b1,true);
@@ -271,21 +278,30 @@ class GameLoop {
     var bgstyler = new WidgetStyler() {bg=new SFML.Graphics.Color(32,32,64)};
     v.baseStyler = bgstyler;
 
-    LogicCursorSet lcs = new LogicCursorSet();
+    var testGUI = new TestGUI();
+    testGUI.AddButton1(b1handler);
+    testGUI.AddButton2(b2handler, t2);
+    //testGUI.AddHandler(b1handler);
+    //testGUI.AddHandler(b2handler);
 
-    var gl = new MenuReceiverGUILogic(lcs);
-    row.SetGUILogic(gl);
+    //LogicCursorSet lcs = new LogicCursorSet();
 
-    gl.testWidget = v;
+    //var gl = new MenuReceiverGUILogic(lcs);
+    //row.SetGUILogic(gl);
 
-    var bl1 = gl.WireUpNewButton(b1);
-    var bl2 = gl.WireUpNewButton(b2);
+    //gl.testWidget = v;
 
-    bl1.SetOnDownKeyHandler('1', gl.HandleButtonPress);
-    bl2.SetOnDownKeyHandler('2', gl.HandleButtonPress);
+    //var bl1 = gl.WireUpNewButton(b1);
+    //var bl2 = gl.WireUpNewButton(b2);
 
-    lcs.AddElement(bl1);
-    lcs.AddElement(bl2);
+    //bl1.SetOnDownKeyHandler('1', gl.HandleButtonPress);
+    //bl2.SetOnDownKeyHandler('2', gl.HandleButtonPress);
+
+    //lcs.AddElement(bl1);
+    //lcs.AddElement(bl2);
+
+
+
 
 
     double secondsPerChange = 1.1625/2;
@@ -309,11 +325,8 @@ class GameLoop {
         Input.GetInput(window.HasFocus() );
         foreach (var keyEvent in Input.GetKeyButtonEvents()) {
           Log.Write(keyEvent.ToString());
-          bool processed = gl.ProcessEvent(keyEvent);
-          //bool processed = menutestLogic.ProcessEvent(keyEvent);
-          //if (processed) {
-            //Log.Write("Processed");
-          //}
+          //bool processed = gl.ProcessEvent(keyEvent);
+          bool processed = testGUI.ProcessEvent(keyEvent);
         }
 
         //Handle mouse-over logic

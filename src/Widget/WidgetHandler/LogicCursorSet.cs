@@ -1,4 +1,4 @@
-namespace Star.Widget {
+/*namespace Star.Widget {
 
   public class LogicCursorSet {
 
@@ -65,4 +65,4 @@ namespace Star.Widget {
   }
 
 
-}
+}*/
